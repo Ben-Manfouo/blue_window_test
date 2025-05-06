@@ -4,9 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Brand extends Model
 {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
+
+
     protected $primaryKey = 'brand_id';
     protected $fillable = ['brand_name', 'brand_image', 'rating'];
 

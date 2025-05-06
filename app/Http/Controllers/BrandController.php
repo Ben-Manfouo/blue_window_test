@@ -18,7 +18,7 @@ class BrandController extends Controller
     {
         $validator = Validator::make(json_decode(json_encode($request->all()), true),
             [
-                'brand_name' => 'bail|required|string|unique:brands,brand_name',
+                'brand_name' => 'bail|required|string|unique:brands,brand_name,NULL,brand_id,deleted_at,NULL',
                 'brand_image' => 'bail|required|url',
                 'rating' => 'bail|required|integer|min:0|max:5'
             ]
@@ -45,7 +45,7 @@ class BrandController extends Controller
         if(!empty($brand)){
             $validator = Validator::make(json_decode(json_encode($request->all()), true),
                 [
-                    'brand_name' => 'bail|nullable|string|unique:brands,brand_name,' . $id . ',brand_id',
+                    'brand_name' => 'bail|nullable|string|unique:brands,brand_name,' . $id . ',brand_id,deleted_at,NULL',
                     'brand_image' => 'bail|nullable|url',
                     'rating' => 'bail|nullable|integer|min:0|max:5'
                 ]
@@ -63,7 +63,8 @@ class BrandController extends Controller
 
     public function destroy($id)
     {
-        Brand::destroy($id); // Delete
+        $brand = Brand::find($id);
+        if(!empty($brand)) $brand->delete();
         return Dialogue::send_response(true);
     }
 }
