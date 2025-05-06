@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Country extends Model
 {
+    protected $primaryKey = 'country_id';
+
     public function brands(): BelongsToMany
     {
         return $this->belongsToMany(Brand::class, 'brands_countries', 'country_id', 'brand_id');
