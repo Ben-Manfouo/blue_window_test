@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Models\Country;
 use App\Services\Dialogue\Dialogue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -11,7 +12,7 @@ class BrandController extends Controller
 {
     public function index()
     {
-        return Dialogue::send_response(true, '', Brand::all());
+        return Dialogue::send_response(true, '', Brand::with('countries')->get());
     }
 
     public function store(Request $request)
@@ -26,22 +27,23 @@ class BrandController extends Controller
         if ($validator->stopOnFirstFailure()->fails()) {
             return Dialogue::send_response(false, $validator->errors()->first());
         }
-        $user = Brand::create($request->all());
-        return Dialogue::send_response(true, '', [$user->refresh()], 201);
+        $brand = Brand::create($request->all());
+        $brand->refresh()->load('countries');
+        return Dialogue::send_response(true, '', [$brand], 201);
     }
 
     public function show($id)
     {
-        $brand = Brand::find($id);
+        $brand = Brand::with('countries')->find($id);
         if(!empty($brand))
-            return Dialogue::send_response(true, '', [$brand], 201);
+            return Dialogue::send_response(true, '', [$brand]);
         else
             return Dialogue::send_response(false, __('brand not found'));
     }
 
     public function update(Request $request, $id)
     {
-        $brand = Brand::find($id);
+        $brand = Brand::with('countries')->find($id);
         if(!empty($brand)){
             $validator = Validator::make(json_decode(json_encode($request->all()), true),
                 [
@@ -54,8 +56,8 @@ class BrandController extends Controller
                 return Dialogue::send_response(false, $validator->errors()->first());
             }
 
-            $brand->update($request->all()); // Update
-            return Dialogue::send_response(true, '', [$brand->refresh()]);
+            $brand->update($request->all());
+            return Dialogue::send_response(true, '', [$brand]);
         }
         return Dialogue::send_response(false, __('brand not found'));
     }
@@ -66,5 +68,71 @@ class BrandController extends Controller
         $brand = Brand::find($id);
         if(!empty($brand)) $brand->delete();
         return Dialogue::send_response(true);
+    }
+
+
+    public function assignCountries(Request $request, $id)
+    {
+        $validator = Validator::make(json_decode(json_encode($request->all()), true),
+            [
+                'country_ids' => 'required|array',
+                'country_ids.*' => 'exists:countries,country_iso_2_code',
+            ]
+        );
+        if ($validator->stopOnFirstFailure()->fails()) {
+            return Dialogue::send_response(false, $validator->errors()->first());
+        }
+
+        $brand = Brand::find($id);
+        if(!empty($brand)){
+            $brand->countries()->sync(Country::whereIn('country_iso_2_code', $request->country_ids)->pluck('country_id'));
+            $brand->refresh()->load('countries');
+            return Dialogue::send_response(true, '', [$brand->refresh()]);
+        }
+        return Dialogue::send_response(false, __('brand not found'));
+    }
+
+
+    public function addCountries(Request $request, $id)
+    {
+        $validator = Validator::make(json_decode(json_encode($request->all()), true),
+            [
+                'country_ids' => 'required|array',
+                'country_ids.*' => 'exists:countries,country_iso_2_code',
+            ]
+        );
+        if ($validator->stopOnFirstFailure()->fails()) {
+            return Dialogue::send_response(false, $validator->errors()->first());
+        }
+
+        $brand = Brand::find($id);
+        if(!empty($brand)){
+            $brand->countries()->syncWithoutDetaching(Country::whereIn('country_iso_2_code', $request->country_ids)->pluck('country_id'));
+            $brand->refresh()->load('countries');
+            return Dialogue::send_response(true, '', [$brand->refresh()]);
+        }
+        return Dialogue::send_response(false, __('brand not found'));
+    }
+
+
+    public function removeCountries(Request $request, $id)
+    {
+        $validator = Validator::make(json_decode(json_encode($request->all()), true),
+            [
+                'country_ids' => 'required|array',
+                'country_ids.*' => 'exists:countries,country_iso_2_code',
+            ]
+        );
+        if ($validator->stopOnFirstFailure()->fails()) {
+            return Dialogue::send_response(false, $validator->errors()->first());
+        }
+
+        $brand = Brand::find($id);
+        if(!empty($brand)){
+            $brand->countries()->detach(Country::whereIn('country_iso_2_code', $request->country_ids)->pluck('country_id'));
+            $brand->refresh()->load('countries');
+            return Dialogue::send_response(true, '', [$brand->refresh()]);
+        }
+        return Dialogue::send_response(false, __('brand not found'));
     }
 }

@@ -14,9 +14,11 @@ class Brand extends Model
 
     protected $primaryKey = 'brand_id';
     protected $fillable = ['brand_name', 'brand_image', 'rating'];
+    protected $hidden = ['deleted_at'];
 
     public function countries(): BelongsToMany
     {
-        return $this->belongsToMany(Country::class, 'brands_countries', 'brand_id', 'country_id');
+        return $this->belongsToMany(Country::class, 'brands_countries', 'brand_id', 'country_id')
+            ->orderBy('countries.country_name', 'asc');
     }
 }

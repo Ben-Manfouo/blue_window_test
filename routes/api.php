@@ -11,4 +11,8 @@ Route::group(['prefix' => 'brands'], function (){
     Route::get('/{brand_id}', [BrandController::class, "show"]);
     Route::patch('/{brand_id}', [BrandController::class, "update"]);
     Route::delete('/{brand_id}', [BrandController::class, "destroy"]);
+
+    Route::post('/{id}/assign-countries', [BrandController::class, 'assignCountries']);
+    Route::post('/{id}/add-countries', [BrandController::class, 'addCountries']);
+    Route::post('/{id}/remove-countries', [BrandController::class, 'removeCountries']);
 });
