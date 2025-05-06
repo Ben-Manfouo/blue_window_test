@@ -6,12 +6,17 @@ use App\Models\Brand;
 use App\Models\Country;
 use App\Services\Dialogue\Dialogue;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 
 class BrandController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+
+        $page = array_key_exists('page', $request->all()) ? intval($request->all()['page']) : 1;
+        $per_page = 20;
         $countryCode = request()->header('CF-IPCountry');
         $brands = Brand::with('countries')->where(function ($query) use ($countryCode){
             if(!empty($countryCode)){
@@ -20,7 +25,15 @@ class BrandController extends Controller
                 });
             }
         })->orderBy('rating', 'desc')->get();
-        return Dialogue::send_response(true, '', $brands);
+
+
+        return Dialogue::send_response(true, '', new LengthAwarePaginator(
+            collect($brands)->slice(($page - 1) * $per_page, $per_page)->values(), // Only items for the current page
+            count($brands), // Total items
+            $per_page, // Items per page
+            $page, // Current page
+            ['path' => Paginator::resolveCurrentPath()] // Path for pagination links
+        ));
     }
 
     public function store(Request $request)
