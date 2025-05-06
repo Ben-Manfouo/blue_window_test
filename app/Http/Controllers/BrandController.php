@@ -18,7 +18,9 @@ class BrandController extends Controller
         $page = array_key_exists('page', $request->all()) ? intval($request->all()['page']) : 1;
         $per_page = 20;
         $countryCode = request()->header('CF-IPCountry');
-        $brands = Brand::with('countries')->where(function ($query) use ($countryCode){
+        $brands = Brand::
+//        with('countries')->
+        where(function ($query) use ($countryCode){
             if(!empty($countryCode)){
                 $query->whereHas('countries', function ($q) use ($countryCode) {
                     $q->where('country_iso_2_code', $countryCode);

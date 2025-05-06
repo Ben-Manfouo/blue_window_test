@@ -14,13 +14,13 @@ class BrandCountrySeeder extends Seeder
      */
     public function run(): void
     {
-        $brands = Brand::all();
-        $countryIds = Country::pluck('country_id');
+        $countries = Country::all();
+        $brandIds = Brand::pluck('brand_id');
 
-        foreach ($brands as $brand) {
+        foreach ($countries as $country) {
             // Attach 1 to 5 random countries to each brand
-            $randomCountryIds = $countryIds->random(rand(1, 5))->all();
-            $brand->countries()->attach($randomCountryIds);
+            $randomBrandIds = $brandIds->random(rand(6, 15))->all();
+            $country->brands()->attach($randomBrandIds);
         }
     }
 }
