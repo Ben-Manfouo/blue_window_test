@@ -16,7 +16,7 @@ class BrandController extends Controller
     {
 
         $page = array_key_exists('page', $request->all()) ? intval($request->all()['page']) : 1;
-        $per_page = 20;
+        $per_page = 10;
         $countryCode = request()->header('CF-IPCountry');
         $brands = Brand::
 //        with('countries')->

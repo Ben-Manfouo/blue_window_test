@@ -19,15 +19,15 @@ class BrandFactory extends Factory
     {
         return [
             'brand_name' => fake()->company(),
-            'brand_image' => fake()->imageUrl(),
-            'brand_description' => fake()->text(2000),
+            'brand_image' => "https://images.seeklogo.com/logo-png/25/1/betclic-logo-png_seeklogo-259942.png",
+            'brand_description' => fake()->text(400),
             'rating' => fake()->numberBetween(0, 5),
             'is_best_rated' => fake()->boolean(),
             'is_popular' => fake()->boolean(),
             'website_link' => fake()->url(),
             'is_bonus_exclusive' => fake()->boolean(),
-            'bonus_description' => fake()->text(30),
-            'bonus_details' => fake()->text(25),
+            'bonus_description' => "200% jusqu'à 500€",
+            'bonus_details' => "+ 500 Tours Gratuits",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ];
