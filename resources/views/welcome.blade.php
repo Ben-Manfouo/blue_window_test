@@ -8,8 +8,21 @@
 </head>
 <body class="py-4 px-10">
 
-<h1 class="bg-noir rounded-t-md py-3 px-6 text-white text-xl font-medium">
+<h1 class="bg-noir rounded-t-md py-0 px-6 text-white text-xl flex justify-between items-center font-medium">
     Meilleur Casino en ligne Français : Comparatif du top casino - juin 2024
+    <div>
+        <select name="country" id="country" class="form-select">
+            <option value="">
+                Sélectionner un pays
+            </option>
+            @foreach ($countries as $country)
+                <option value="{{ $country['country_iso_2_code'] }}">
+                    {{ $country['country_name'] }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <div class="pagination flex gap-2"></div>
 </h1>
 
 <div class="flex w-full bg-bleu-clair text-white text-left font-medium border-b border-gray-400">
@@ -26,11 +39,17 @@
 
 <div id="data-container"></div>
 
-<div id="pagination" class="flex gap-2 mt-4"></div>
+<div class="pagination flex gap-2 mt-0"></div>
 
 <script>
     const container = document.getElementById('data-container');
-    const pagination = document.getElementById('pagination');
+    const paginations = document.getElementsByClassName('pagination');
+
+    document.getElementById('country').addEventListener('change', function () {
+        const selectedCountry = this.value;
+        localStorage.setItem('countryCode', selectedCountry);
+        loadData();
+    });
 
     function renderSkeleton(count = 5) {
         container.innerHTML = '';
@@ -187,20 +206,39 @@
     }
 
     function renderPagination(total, currentPage, perPage) {
-        pagination.innerHTML = '';
-        const pages = Math.ceil(total / perPage);
-        for (let i = 1; i <= pages; i++) {
-            pagination.innerHTML += `<button class="px-3 py-1 rounded border ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-white'}" onclick="loadData(${i})">${i}</button>`;
+        for (const pagination of paginations) {
+            pagination.innerHTML = '';
+            const pages = Math.ceil(total / perPage);
+            pagination.innerHTML += `
+            <div class="flex justify-end items-center my-4 mr-3 w-full">
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+            <div class="pr-4">${total} éléments</div>
+            ${
+                currentPage === 1 ? '|' : `<button onclick="loadData(${currentPage-1})" class="cursor-pointer text-blue"><i class="fa-solid fa-chevron-left"></i>Préc</button>`
+            }
+            <div class="px-2 text-xs">${currentPage} sur ${pages}</div>
+            ${
+                currentPage === pages ? '' : `<button onclick="loadData(${currentPage+1})" class="cursor-pointer text-blue">Suiv <i class="fa-solid fa-chevron-right"></i></button>`
+            }
+        </div>
+    </div>
+            `;
         }
     }
 
     async function loadData(page = 1) {
         renderSkeleton();
-        const res = await fetch(`http://localhost:8000/api/brands?page=${page}`);
+        const res = await fetch(`http://localhost:8000/api/brands?page=${page}`, {
+            method: 'GET',
+            headers: {
+                'CF-IPCountry': localStorage.getItem('countryCode') ?? '',
+                'Accept': 'application/json'
+            }
+        });
         const result = await res.json();
         console.log(result);
         renderData(result.data.data);
-        renderPagination(result.data.total, result.data.page, result.data.per_page);
+        renderPagination(result.data.total, result.data.current_page, result.data.per_page);
     }
 
     // Load on page start
