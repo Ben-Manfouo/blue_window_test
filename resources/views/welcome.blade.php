@@ -68,7 +68,7 @@
     </style>
 </head>
 <body>
-<h1>Meilleur Casino en ligne Français : Comparatif du top casino - juin 2024</h1>
+<h1>Meilleur Casino en ligne Français : Comparatif du top casino - juin 2025</h1>
 
 <table>
 
