@@ -12,7 +12,15 @@ class BrandController extends Controller
 {
     public function index()
     {
-        return Dialogue::send_response(true, '', Brand::with('countries')->get());
+        $countryCode = request()->header('CF-IPCountry');
+        $brands = Brand::with('countries')->where(function ($query) use ($countryCode){
+            if(!empty($countryCode)){
+                $query->whereHas('countries', function ($q) use ($countryCode) {
+                    $q->where('country_iso_2_code', $countryCode);
+                });
+            }
+        })->orderBy('rating', 'desc')->get();
+        return Dialogue::send_response(true, '', $brands);
     }
 
     public function store(Request $request)
