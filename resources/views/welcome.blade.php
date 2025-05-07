@@ -135,7 +135,7 @@
             container.innerHTML += `
             <!-- Mobile View -->
             <div class="md:hidden border-x border-y border-gray-200 space-y-4 my-8 relative">
-            <div class="bg-gray-100 text-xs font-bold items-center justfiy-center text-black absolute top-0 left-0 z-10 px-3 py-2">${(currentPage * perPage) + (i + 1) }</div>
+                <div class="bg-gray-100 text-xs font-bold items-center justfiy-center text-black absolute top-0 left-0 z-10 px-3 py-2">${(currentPage * perPage) + (i + 1) }</div>
               <!-- 2 Columns Layout -->
               <div class="grid grid-cols-2 gap-4 p-4">
 
@@ -190,7 +190,7 @@
             </div>
 
             <div class="hidden md:flex w-full ${i % 2 === 0 ? 'bg-white' : 'bg-gray-100'} text-left font-medium border-b border-gray-400">
-                <div class="flex flex-col md:flex-row border-x border-gray-400">
+                <div class="w-full flex flex-col md:flex-row border-x border-gray-400">
 
                     <div class="w-full md:w-[5%] relative py-2 flex justify-center items-center text-xl border-b md:border-r md:border-b-0 border-gray-400">
                         ${
