@@ -58,7 +58,7 @@
         container.innerHTML = '';
         for (let i = 0; i < count; i++) {
             container.innerHTML += `
-                    <div class="flex w-full ${ i % 2 === 0 ? "bg-white" : "bg-gray-100"} text-left font-medium border-b border-gray-400">
+                    <div class="hidden md:flex w-full ${ i % 2 === 0 ? "bg-white" : "bg-gray-100"} text-left font-medium border-b border-gray-400">
             <div class="w-[5%] relative border-x border-gray-400 py-2 flex justify-center items-center text-xl">
                 <div class="bg-gray-300 rounded-br-lg text-xs text-white absolute top-0 left-0 z-10 w-22 pl-1">
                     <!-- Label (optional) -->
@@ -133,7 +133,63 @@
         `;
 
             container.innerHTML += `
-            <div class="w-full ${i % 2 === 0 ? 'bg-white' : 'bg-gray-100'} text-left font-medium border-b border-gray-400">
+            <!-- Mobile View -->
+            <div class="md:hidden border-x border-y border-gray-200 space-y-4 my-8 relative">
+            <div class="bg-gray-100 text-xs font-bold items-center justfiy-center text-black absolute top-0 left-0 z-10 px-3 py-2">${(currentPage * perPage) + (i + 1) }</div>
+              <!-- 2 Columns Layout -->
+              <div class="grid grid-cols-2 gap-4 p-4">
+
+                <!-- Column 1 -->
+                <div class="flex flex-col items-center space-y-3 pr-2 border-r border-gray-200">
+                  <!-- Brand Image -->
+                  <img src="${brand.brand_image}" class="h-22 w-auto rounded-full border border-gray-300 cursor-pointer">
+
+                  <!-- Stars -->
+                  <div class="inline-flex gap-0 text-md text-gray-200">
+                    ${[...Array(5)].map((_, i) => `
+                      <i class="fa-solid fa-star ${brand.rating >= i + 1 ? 'text-or' : ''}"></i>
+                    `).join('')}
+                  </div>
+
+                  <!-- Settings + Brand Name Row -->
+                  <div class="flex items-center gap-1">
+                    <img src="/assets/icons/setting-check.png" class="h-6 w-auto">
+                    <div class="text-blue font-bold text-sm cursor-pointer">${brand.brand_name}</div>
+                  </div>
+                </div>
+
+                <!-- Column 2 -->
+                <div class="flex flex-col items-center justify-between space-y-3">
+                  <!-- 18+ Icon -->
+                  <img src="/assets/icons/upper-18.png" class="h-6 w-auto">
+
+                  <!-- Bonus Description -->
+                  <div class="text-center">
+                    <div class="font-bold text-base">${brand.bonus_description}</div>
+                    <div class="font-medium text-sm">${brand.bonus_details}</div>
+                  </div>
+
+                  <!-- CTA -->
+                  <div class="text-center space-y-2 w-full">
+                    <button class="rounded-md bg-green shadow text-white text-sm px-4 py-2 w-full cursor-pointer">
+                      Obtenir le bonus
+                    </button>
+                    <div class="cursor-pointer text-blue font-bold text-sm">
+                      Visiter le site
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+               <!-- Description -->
+              <div class="text-xs text-gray-500 border-t border-gray-200 py-2 px-4 bg-gray-100">
+                ${brand.brand_description}
+              </div>
+
+            </div>
+
+            <div class="hidden md:flex w-full ${i % 2 === 0 ? 'bg-white' : 'bg-gray-100'} text-left font-medium border-b border-gray-400">
                 <div class="flex flex-col md:flex-row border-x border-gray-400">
 
                     <div class="w-full md:w-[5%] relative py-2 flex justify-center items-center text-xl border-b md:border-r md:border-b-0 border-gray-400">
@@ -157,10 +213,10 @@
                             <div class="w-full md:w-[25.23%] border-t md:border-t-0 md:border-r border-gray-400 py-4 flex items-center justify-center">
                                 <div class="flex flex-col lg:flex-row items-center gap-2 w-full px-4">
                                     <div class="w-full flex justify-center lg:justify-end items-center">
-                                        <img src="${brand.brand_image}" class="h-20 lg:h-24 w-auto rounded-full border border-gray-300 mx-auto md:mx-0">
+                                        <img src="${brand.brand_image}" class="cursor-pointer h-20 lg:h-24 w-auto rounded-full border border-gray-300 mx-auto md:mx-0">
                                     </div>
 
-                                    <div class="w-full text-blue font-bold text-center lg:text-left mt-2 md:mt-0 text-xs lg:text-[14.5px]">${brand.brand_name}</div>
+                                    <div class="cursor-pointer w-full text-blue font-bold text-center lg:text-left mt-2 md:mt-0 text-xs lg:text-[14.5px]">${brand.brand_name}</div>
                                 </div>
                             </div>
 
@@ -197,7 +253,7 @@
                             <!-- Call to Action -->
                             <div class="w-full md:w-[25.23%] py-4 flex justify-center items-center">
                                 <div class="text-center space-y-2 px-2">
-                                    <button class="rounded-md bg-green shadow text-white text-sm md:text-[14px] lg:text-base px-4 lg:px-10 py-2 lg:py-3 w-full">
+                                    <button class="rounded-md bg-green shadow text-white text-sm md:text-[14px] lg:text-base px-4 lg:px-10 py-2 lg:py-3 w-full cursor-pointer">
                                         Obtenir le bonus
                                     </button>
                                     <div class="cursor-pointer text-blue font-bold text-sm md:text-xs lg:text-md">
