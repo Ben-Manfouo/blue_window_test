@@ -24,7 +24,6 @@
     docker-compose up -d --build
     docker-compose exec app composer install
     docker-compose exec app php artisan key:generate
-    docker-compose exec app php artisan cache:table
     docker-compose exec app php artisan migrate:fresh --seed
     docker-compose exec app php artisan optimize:clear
     docker-compose exec app php artisan config:clear
