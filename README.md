@@ -10,7 +10,7 @@ To simulate this behavior on the frontend, I added a dropdown that lets users ma
 
 Furthermore, as a potential enhancement, I considered adding a search bar to allow users to filter brands by name. This could be explored as a future improvement.
 
-For deliverables, I have shared the Git repository link. You can refer to the DOCKER_README.md file for detailed instructions on how to run the project using Docker and view the results.
+For deliverables, I have shared the Git repository link https://github.com/Ben-Manfouo/blue_window_test.git. You can clone it and refer to the DOCKER_README.md file for detailed instructions on how to run the project using Docker and view the results.
 
 Once again, thank you for the opportunity. I remain available for any further information or clarification you may need.
 
