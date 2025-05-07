@@ -4,7 +4,7 @@ FROM php:8.2-fpm
 # Set working directory
 WORKDIR /var/www
 
-# Install dependencies
+# Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpng-dev \
@@ -17,18 +17,25 @@ RUN apt-get update && apt-get install -y \
     git \
     libzip-dev \
     libpq-dev \
+    ca-certificates \
+    gnupg \
     && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath gd
+
+# Install Node.js 18 LTS and npm
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy application
+# Copy application code
 COPY . .
 
 # Permissions
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Expose port 9000
+# Expose port
 EXPOSE 9000
 
 # Start PHP-FPM

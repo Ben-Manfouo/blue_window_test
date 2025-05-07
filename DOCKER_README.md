@@ -25,8 +25,8 @@
     docker-compose exec app composer install
     docker-compose exec app php artisan key:generate
     docker-compose exec app php artisan migrate:fresh --seed
-    npm install
-    npm run build
+    docker-compose exec app npm install
+    docker-compose exec app npm run build
 ```
 
 5. Open browser and visit http://localhost:8000
