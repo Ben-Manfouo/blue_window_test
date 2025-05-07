@@ -32,6 +32,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy application code
 COPY . .
 
+# Permissions Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
 # Permissions
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
