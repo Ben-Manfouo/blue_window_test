@@ -8,26 +8,29 @@
 </head>
 <body class="py-4 px-10">
 
-<h1 class="bg-noir rounded-t-md py-0 px-6 text-white text-xl flex justify-between items-center font-medium">
-    Meilleur Casino en ligne Français : Comparatif du top casino - juin 2024
-    <div>
-        <select name="country" id="country" class="form-select">
-            <option value="">
-                Sélectionner un pays
-            </option>
+<div class="bg-noir rounded-t-md py-1 px-4 lg:px-6 text-white text-lg lg:text-xl flex flex-col lg:flex-row lg:justify-between lg:items-center font-medium">
+
+    <div class="w-full">
+        Meilleur Casino en ligne Français : Comparatif du top casino - juin 2024
+    </div>
+
+    <div class="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between py-2 sm:py-0">
+        <select name="country" id="country" class="form-select w-full sm:w-auto">
+            <option value="">Sélectionner un pays</option>
             @foreach ($countries as $country)
                 <option value="{{ $country['country_iso_2_code'] }}">
                     {{ $country['country_name'] }}
                 </option>
             @endforeach
         </select>
-    </div>
-    <div class="pagination flex gap-2"></div>
-</h1>
 
-<div class="flex w-full bg-bleu-clair text-white text-left font-medium border-b border-gray-400">
-    <div class="w-[5%] border-x border-gray-400 py-2 flex justify-center items-center">#</div>
-    <div class="w-[95%] flex border-r border-gray-400">
+        <div class="pagination flex gap-2 justify-center sm:justify-end w-full sm:w-auto"></div>
+    </div>
+</div>
+
+<div class="w-full bg-bleu-clair text-white text-left font-medium border-b border-gray-400 hidden md:flex">
+    <div class="w-[5%] border-x border-gray-400 py-2 flex justify-center items-center text-[12px] lg:text-lg">#</div>
+    <div class="w-[95%] flex border-r border-gray-400 text-[12px] lg:text-lg">
         <div class="w-[25.23%] border-r border-gray-400 py-2 flex justify-center items-center">Casino</div>
         <div class="w-[7.48%] border-r border-gray-400 py-2 flex justify-center items-center"></div>
         <div class="w-[25.23%] border-r border-gray-400 py-2 flex justify-center items-center">Bonus</div>
@@ -118,90 +121,100 @@
         }
     }
 
-    function renderData(data) {
+    function renderData(data, currentPage, perPage) {
         container.innerHTML = '';
         data.forEach((brand, i) => {
-
             const starsHtml = `
-    <div class="inline-flex gap-0 text-lg text-gray-200">
-        ${[...Array(5)].map((_, i) => `
-            <i class="fa-solid fa-star ${brand.rating >= i + 1 ? 'text-or' : ''}"></i>
-        `).join('')}
-    </div>
-`;
+            <div class="inline-flex gap-0 text-md md:text-[12px] lg:text-lg text-gray-200">
+                ${[...Array(5)].map((_, i) => `
+                    <i class="fa-solid fa-star ${brand.rating >= i + 1 ? 'text-or' : ''}"></i>
+                `).join('')}
+            </div>
+        `;
 
             container.innerHTML += `
-                    <div class="flex w-full ${ i % 2 === 0 ? "bg-white" : "bg-gray-100"} text-left font-medium border-b border-gray-400">
-        <div class="w-[5%] relative border-x border-gray-400 py-2 flex justify-center items-center text-xl">
-            ${
-                brand.is_best_rated
-                    ? `<div class="bg-violet rounded-br-lg text-xs text-white absolute top-0 left-0 z-10 w-22 pl-1">
-                            MIEUX NOTÉ
-                        </div>`
-                    : brand.is_popular ? `<div class="bg-orange rounded-br-lg text-xs text-white absolute top-0 left-0 z-10 w-19 pl-1">
-                            POPULAIRE
-                        </div>`
-                        : ''
-            }
-            ${ i + 1}
-                </div>
-                <div class="w-[95%] border-r border-gray-400">
-                    <div class="flex w-full text-black">
-                        <div class="w-[25.23%] border-r border-gray-400 py-2 flex justify-center items-center">
-                            <div class="inline-flex items-center justify-center gap-2 py-1 px-auto w-full">
-                                <div class="w-[50%] flex justify-end items-center">
-                                    <img src="${ brand.brand_image}" class="h-24 w-auto rounded-full border border-gray-300 p-2">
-                                </div>
-                                <div class="text-blue font-bold w-[50%] flex justify-start items-center">
-                                    ${ brand.brand_name}
-                                </div>
-                            </div>
+            <div class="w-full ${i % 2 === 0 ? 'bg-white' : 'bg-gray-100'} text-left font-medium border-b border-gray-400">
+                <div class="flex flex-col md:flex-row border-x border-gray-400">
 
-                        </div>
-                        <div class="w-[7.48%] border-r border-gray-400 py-2 flex justify-center items-center">
-                            <img src="/assets/icons/setting-check.png" class="h-10 w-auto">
-                        </div>
-                        <div class="w-[25.23%] relative border-r border-gray-400 py-2 flex justify-center items-center">
-
+                    <div class="w-full md:w-[5%] relative py-2 flex justify-center items-center text-xl border-b md:border-r md:border-b-0 border-gray-400">
                         ${
-                            brand.is_bonus_exclusive
-                                ? `<div class="bg-red rounded-br-lg text-sm text-white absolute top-0 left-0 z-10 w-37 pl-1">
-                                EXCLUSIF
-                            </div>`
-                                : ''
+                            brand.is_best_rated
+                                ? `<div class="bg-violet rounded-br-lg text-xs text-white absolute top-0 left-0 z-10 w-22 pl-1">
+                                                                MIEUX NOTÉ
+                                                            </div>`
+                                : brand.is_popular
+                                    ? `<div class="bg-orange rounded-br-lg text-xs text-white absolute top-0 left-0 z-10 w-19 pl-1">
+                                                                POPULAIRE
+                                                            </div>`
+                                    : ''
                         }
-                            <div class="text-center">
-                                <div class="font-bold text-lg text-black">
-                                    ${ brand.bonus_description}
-                                </div>
-                                <div class="font-medium text-sm">
-                                    ${ brand.bonus_details}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-[9.35%] border-r border-gray-400 py-2 flex justify-center items-center">
-                            ${starsHtml}
-                        </div>
-                        <div class="w-[7.48%] border-r border-gray-400 py-2 flex justify-center items-center">
-                            <img src="/assets/icons/upper-18.png" class="h-8 w-auto">
-                        </div>
-                        <div class="w-[25.23%] py-2 flex justify-center items-center">
-                            <div class="text-center space-y-1">
-                                <button class="rounded-md bg-green shadow text-white px-10 py-3">
-                                    Obtenir le bonus
-                                </button>
-                                <div class="cursor-pointer text-blue font-bold text-md">
-                                    Visiter le site
-                                </div>
-                            </div>
-                        </div>
+                        ${(currentPage * perPage) + (i + 1) }
                     </div>
-                    <div class="w-full border-t border-gray-400 py-1 px-2 text-xs text-gray-400">
-                        ${ brand.brand_description}
+
+                    <div class="w-full md:w-[95%] border-gray-400">
+                        <div class="flex flex-col md:flex-row text-black">
+                            <!-- Brand Image & Name -->
+                            <div class="w-full md:w-[25.23%] border-t md:border-t-0 md:border-r border-gray-400 py-4 flex items-center justify-center">
+                                <div class="flex flex-col lg:flex-row items-center gap-2 w-full px-4">
+                                    <div class="w-full flex justify-center lg:justify-end items-center">
+                                        <img src="${brand.brand_image}" class="h-20 lg:h-24 w-auto rounded-full border border-gray-300 mx-auto md:mx-0">
+                                    </div>
+
+                                    <div class="w-full text-blue font-bold text-center lg:text-left mt-2 md:mt-0 text-xs lg:text-[14.5px]">${brand.brand_name}</div>
+                                </div>
+                            </div>
+
+                            <!-- Settings Icon -->
+                            <div class="w-full md:w-[7.48%] border-t md:border-t-0 md:border-r border-gray-400 py-4 flex justify-center items-center">
+                                <img src="/assets/icons/setting-check.png" class="h-8 md:h-10 w-auto">
+                            </div>
+
+                            <!-- Bonus -->
+                            <div class="w-full md:w-[25.23%] relative border-t md:border-t-0 md:border-r border-gray-400 py-4 flex justify-center items-center">
+                                ${
+                brand.is_bonus_exclusive
+                    ? `<div class="bg-red rounded-br-lg text-sm text-white absolute top-0 left-0 z-10 w-37 pl-1">
+                                            EXCLUSIF
+                                        </div>`
+                    : ''
+            }
+                                <div class="text-center px-2">
+                                    <div class="font-bold text-base md:text-[15px] lg:text-lg">${brand.bonus_description}</div>
+                                    <div class="font-medium text-sm md:text-[13px] lg:text-sm">${brand.bonus_details}</div>
+                                </div>
+                            </div>
+
+                            <!-- Stars -->
+                            <div class="w-full md:w-[9.35%] border-t md:border-t-0 md:border-r border-gray-400 py-4 flex justify-center items-center">
+                                ${starsHtml}
+                            </div>
+
+                            <!-- 18+ Icon -->
+                            <div class="w-full md:w-[7.48%] border-t md:border-t-0 md:border-r border-gray-400 py-4 flex justify-center items-center">
+                                <img src="/assets/icons/upper-18.png" class="h-6 md:h-8 w-auto">
+                            </div>
+
+                            <!-- Call to Action -->
+                            <div class="w-full md:w-[25.23%] py-4 flex justify-center items-center">
+                                <div class="text-center space-y-2 px-2">
+                                    <button class="rounded-md bg-green shadow text-white text-sm md:text-[14px] lg:text-base px-4 lg:px-10 py-2 lg:py-3 w-full">
+                                        Obtenir le bonus
+                                    </button>
+                                    <div class="cursor-pointer text-blue font-bold text-sm md:text-xs lg:text-md">
+                                        Visiter le site
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="w-full border-t border-gray-400 py-2 px-4 text-xs text-gray-500">
+                            ${brand.brand_description}
+                        </div>
                     </div>
                 </div>
             </div>
-`;
+        `;
         });
     }
 
@@ -236,8 +249,7 @@
             }
         });
         const result = await res.json();
-        console.log(result);
-        renderData(result.data.data);
+        renderData(result.data.data, result.data.current_page - 1, result.data.per_page);
         renderPagination(result.data.total, result.data.current_page, result.data.per_page);
     }
 
